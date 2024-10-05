@@ -1,6 +1,7 @@
+using Unity.Netcode;
 using UnityEngine;
 
-public class RigidbodyDragToMousePositionController : MonoBehaviour
+public class RigidbodyDragToMousePositionController : NetworkBehaviour
 {
     [SerializeField]
     private Rigidbody _rigidbody;
@@ -9,7 +10,7 @@ public class RigidbodyDragToMousePositionController : MonoBehaviour
     private float _moveSpeed = 3.0f;
 
     [SerializeField]
-    private float _rotationSpeed = 3.0f;
+    private float _rotationSpeed = 10.0f;
 
     private bool _continueDrag;
 
@@ -101,7 +102,7 @@ public class RigidbodyDragToMousePositionController : MonoBehaviour
         _rigidbody.MovePosition(newPosition);
 
         // Define the target rotation with the upright rotation (lock X and Z to 0)
-        Quaternion targetRotation = Quaternion.Euler(0, _rigidbody.rotation.eulerAngles.y, 0);
+        Quaternion targetRotation = Quaternion.Euler(0, 0, 0);
 
         // Smoothly rotate towards the target rotation
         _rigidbody.rotation = Quaternion.Slerp(_rigidbody.rotation, targetRotation, _rotationSpeed * Time.deltaTime);
