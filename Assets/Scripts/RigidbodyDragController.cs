@@ -8,6 +8,9 @@ public class RigidbodyDragToMousePositionController : MonoBehaviour
     [SerializeField]
     private float _speed = 3.00f;
 
+    [SerializeField]
+    private float _rotationSpeed = 3.0f;
+
     private bool _continueDrag;
 
     private Vector2 cursorHotspot = Vector2.zero; // The point of the cursor that "clicks", usually the center or top-left corner
@@ -80,7 +83,7 @@ public class RigidbodyDragToMousePositionController : MonoBehaviour
 
         if (Physics.Raycast(ray, out hit, Mathf.Infinity))
         {
-            // Get the Y position of the ground, adjusted for the ball's size
+            // Get the Y position of the ground, adjusted for the coin's size
             float groundYPosition = hit.point.y + _rigidbody.GetComponent<Collider>().bounds.extents.y;
             targetPosition.y = Mathf.Max(groundYPosition, targetPosition.y); // Clamp Y to prevent going below ground
         }
@@ -90,6 +93,12 @@ public class RigidbodyDragToMousePositionController : MonoBehaviour
         _rigidbody.useGravity = false;
         _rigidbody.velocity = Vector3.zero;
         _rigidbody.MovePosition(newPosition);
+
+        // Define the target rotation with the upright rotation (lock X and Z to 0)
+        Quaternion targetRotation = Quaternion.Euler(0, _rigidbody.rotation.eulerAngles.y, 0);
+
+        // Smoothly rotate towards the target rotation
+        _rigidbody.rotation = Quaternion.Slerp(_rigidbody.rotation, targetRotation, _speed * Time.deltaTime);
     }
 
     private void HandleCursorChange()
