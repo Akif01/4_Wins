@@ -74,6 +74,17 @@ public class RigidbodyDragToMousePositionController : MonoBehaviour
         Vector3 targetPosition = Camera.main.ScreenToWorldPoint(mousePos);
         targetPosition.z = _rigidbody.position.z;  // Ensure it maintains the z position of the rigidbody
 
+        // Raycast downwards from the ball's current position to detect the ground
+        Ray ray = new Ray(_rigidbody.position, Vector3.down); // Cast from the ball's current position
+        RaycastHit hit;
+
+        if (Physics.Raycast(ray, out hit, Mathf.Infinity))
+        {
+            // Get the Y position of the ground, adjusted for the ball's size
+            float groundYPosition = hit.point.y + _rigidbody.GetComponent<Collider>().bounds.extents.y;
+            targetPosition.y = Mathf.Max(groundYPosition, targetPosition.y); // Clamp Y to prevent going below ground
+        }
+
         // Smoothly move the rigidbody to the target position
         Vector3 newPosition = Vector3.Lerp(_rigidbody.position, targetPosition, _speed * Time.deltaTime);
         _rigidbody.useGravity = false;
