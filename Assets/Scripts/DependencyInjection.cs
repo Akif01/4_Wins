@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection;
 using UnityEngine;
 
-public static class DependencyInjectionContainer
+public static class DependencyInjection
 {
     private static readonly Dictionary<Type, object> _services =  new();
 
