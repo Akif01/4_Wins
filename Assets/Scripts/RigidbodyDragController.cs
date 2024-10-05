@@ -6,7 +6,7 @@ public class RigidbodyDragToMousePositionController : MonoBehaviour
     private Rigidbody _rigidbody;
 
     [SerializeField]
-    private float _speed = 3.00f;
+    private float _moveSpeed = 3.0f;
 
     [SerializeField]
     private float _rotationSpeed = 3.0f;
@@ -17,6 +17,12 @@ public class RigidbodyDragToMousePositionController : MonoBehaviour
 
     [SerializeField]
     private Texture2D _dragCursor;  // Assign your hand or grab icon here
+
+    private void Start()
+    {
+        if (_rigidbody == null)
+            _rigidbody = GetComponent<Rigidbody>();
+    }
 
     // Update is called once per frame
     void Update()
@@ -77,7 +83,7 @@ public class RigidbodyDragToMousePositionController : MonoBehaviour
         Vector3 targetPosition = Camera.main.ScreenToWorldPoint(mousePos);
         targetPosition.z = _rigidbody.position.z;  // Ensure it maintains the z position of the rigidbody
 
-        // Raycast downwards from the ball's current position to detect the ground
+        // Raycast downwards from the balls current position to detect the ground
         Ray ray = new Ray(_rigidbody.position, Vector3.down); // Cast from the ball's current position
         RaycastHit hit;
 
@@ -89,7 +95,7 @@ public class RigidbodyDragToMousePositionController : MonoBehaviour
         }
 
         // Smoothly move the rigidbody to the target position
-        Vector3 newPosition = Vector3.Lerp(_rigidbody.position, targetPosition, _speed * Time.deltaTime);
+        Vector3 newPosition = Vector3.Lerp(_rigidbody.position, targetPosition, _moveSpeed * Time.deltaTime);
         _rigidbody.useGravity = false;
         _rigidbody.velocity = Vector3.zero;
         _rigidbody.MovePosition(newPosition);
@@ -98,7 +104,7 @@ public class RigidbodyDragToMousePositionController : MonoBehaviour
         Quaternion targetRotation = Quaternion.Euler(0, _rigidbody.rotation.eulerAngles.y, 0);
 
         // Smoothly rotate towards the target rotation
-        _rigidbody.rotation = Quaternion.Slerp(_rigidbody.rotation, targetRotation, _speed * Time.deltaTime);
+        _rigidbody.rotation = Quaternion.Slerp(_rigidbody.rotation, targetRotation, _rotationSpeed * Time.deltaTime);
     }
 
     private void HandleCursorChange()
