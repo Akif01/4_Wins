@@ -14,11 +14,17 @@ public static class DependencyInjection
     {
     }
 
-    private static void RegisterSingelton<T>(T service) => _singeltonServices[typeof(T)] = service;
+    private static void RegisterSingelton<T>(T service) => _singeltonServices.Add(typeof(T), service);
     private static T GetSingelton<T>() => (T)_singeltonServices[typeof(T)];
-    private static object GetSingelton(Type serviceType) => _singeltonServices[serviceType];
+    private static object GetSingelton(Type serviceType) 
+    {
+        object service = null;
+        _singeltonServices.TryGetValue(serviceType, out service);
 
-    private static void RegisterTransient(Type serviceType, Func<object> instansiate) => _transientServices[serviceType] = instansiate;
+        return service;
+    }
+
+    private static void RegisterTransient(Type serviceType, Func<object> instantiate) => _transientServices.Add(serviceType, instantiate);
     private static object GetTransient(Type serviceType) => _transientServices[serviceType]?.Invoke() ?? Activator.CreateInstance(serviceType);
 
     private static void InjectDependencies(object target, FieldInfo[] fieldsWithInject, PropertyInfo[] propertiesWithInject)

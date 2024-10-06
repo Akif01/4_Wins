@@ -21,8 +21,6 @@ public class RigidbodyDragToMousePositionController : NetworkBehaviour
 
     private void Start()
     {
-        DependencyInjection.InjectDependencies(this);
-
         if (_rigidbody == null)
             _rigidbody = GetComponent<Rigidbody>();
     }
