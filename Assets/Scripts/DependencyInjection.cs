@@ -1,3 +1,4 @@
+using Assets.Scripts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,7 @@ public static class DependencyInjection
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterAssembliesLoaded)]
     private static void OnAfterAssembliesLoaded()
     {
+        RegisterSingelton(new EventBroker());
     }
 
     private static void RegisterSingelton<T>(T service) => _singeltonServices.Add(typeof(T), service);
