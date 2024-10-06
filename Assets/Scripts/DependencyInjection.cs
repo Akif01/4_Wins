@@ -6,30 +6,38 @@ using UnityEngine;
 
 public static class DependencyInjection
 {
-    private static readonly Dictionary<Type, object> _services =  new();
+    private static readonly Dictionary<Type, object> _singeltonServices =  new();
+    private static readonly Dictionary<Type, Func<object>> _transientServices =  new();
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterAssembliesLoaded)]
     private static void OnAfterAssembliesLoaded()
     {
     }
 
-    private static void Register<T>(T service) => _services[typeof(T)] = service;
+    private static void RegisterSingelton<T>(T service) => _singeltonServices[typeof(T)] = service;
+    private static T GetSingelton<T>() => (T)_singeltonServices[typeof(T)];
+    private static object GetSingelton(Type serviceType) => _singeltonServices[serviceType];
 
-    private static T GetService<T>() => (T)_services[typeof(T)];
-
-    private static object GetService(Type serviceType) => _services[serviceType];
+    private static void RegisterTransient(Type serviceType, Func<object> instansiate) => _transientServices[serviceType] = instansiate;
+    private static object GetTransient(Type serviceType) => _transientServices[serviceType]?.Invoke() ?? Activator.CreateInstance(serviceType);
 
     private static void InjectDependencies(object target, FieldInfo[] fieldsWithInject, PropertyInfo[] propertiesWithInject)
     {
         foreach (var field in fieldsWithInject)
         {
-            var requiredDependency = GetService(field.FieldType);
+            var requiredDependency = GetSingelton(field.FieldType);
+            if (requiredDependency is null)
+                requiredDependency = GetTransient(field.FieldType);
+
             field.SetValue(target, requiredDependency);
         }
 
         foreach (var property in propertiesWithInject)
         {
-            var requiredDependency = GetService(property.PropertyType);
+            var requiredDependency = GetSingelton(property.PropertyType);
+            if (requiredDependency is null)
+                requiredDependency = GetTransient(property.PropertyType);
+
             property.SetValue(target, requiredDependency);
         }
     }
