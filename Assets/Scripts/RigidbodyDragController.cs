@@ -1,7 +1,7 @@
 using Unity.Netcode;
 using UnityEngine;
 
-public class RigidbodyDragToMousePositionController : NetworkBehaviour
+public class RigidbodyDragController : NetworkBehaviour
 {
     [SerializeField]
     private Rigidbody _rigidbody;
@@ -11,6 +11,9 @@ public class RigidbodyDragToMousePositionController : NetworkBehaviour
 
     [SerializeField]
     private float _rotationSpeed = 10.0f;
+
+    [SerializeField]
+    private Camera _camera;
 
     private bool _continueDrag;
 
@@ -23,12 +26,21 @@ public class RigidbodyDragToMousePositionController : NetworkBehaviour
     {
         if (_rigidbody == null)
             _rigidbody = GetComponent<Rigidbody>();
+
+        if (_camera == null)
+            _camera = transform.parent.gameObject.GetComponentInChildren<Camera>();
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (!IsOwner)
+            return;
+
         if (_rigidbody == null)
+            return;
+
+        if (_camera == null)
             return;
 
         // Detect when the user presses the mouse button to start dragging
@@ -62,7 +74,7 @@ public class RigidbodyDragToMousePositionController : NetworkBehaviour
 
     private void TryStartDrag()
     {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        Ray ray = _camera.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
 
         // Check if the ray hits a collider
@@ -79,9 +91,9 @@ public class RigidbodyDragToMousePositionController : NetworkBehaviour
     private void MoveRigidbodyToMouse()
     {
         Vector3 mousePos = Input.mousePosition;
-        mousePos.z = Camera.main.WorldToScreenPoint(_rigidbody.position).z;  // Keep the z depth consistent
+        mousePos.z = _camera.WorldToScreenPoint(_rigidbody.position).z;  // Keep the z depth consistent
 
-        Vector3 targetPosition = Camera.main.ScreenToWorldPoint(mousePos);
+        Vector3 targetPosition = _camera.ScreenToWorldPoint(mousePos);
         targetPosition.z = _rigidbody.position.z;  // Ensure it maintains the z position of the rigidbody
 
         // Raycast downwards from the balls current position to detect the ground
@@ -113,7 +125,7 @@ public class RigidbodyDragToMousePositionController : NetworkBehaviour
         if (_dragCursor == null)
             return;
 
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        Ray ray = _camera.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
 
         // Check if the cursor is over the Rigidbody
