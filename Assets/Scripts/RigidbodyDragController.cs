@@ -122,7 +122,7 @@ public class RigidbodyDragController : NetworkBehaviour
         Quaternion targetRotation = Quaternion.Euler(0, 0, 0);
 
         // Smoothly rotate towards the target rotation
-        _rigidbody.rotation = Quaternion.RotateTowards(_rigidbody.rotation, targetRotation, _rotationSpeed * Time.deltaTime * 360f);  // Multiply by 360 to make it degrees per second
+        _rigidbody.rotation = Quaternion.RotateTowards(_rigidbody.rotation, targetRotation, _rotationSpeed * Time.fixedDeltaTime * 360f);  // Multiply by 360 to make it degrees per second
     }
 
     private void HandleCursorChange()
