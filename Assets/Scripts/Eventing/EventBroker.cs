@@ -1,8 +1,9 @@
+using Assets.Scripts.Eventing.Events;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Assets.Scripts
+namespace Assets.Scripts.Eventing
 {
     public class EventBroker : IEventPublisher, IEventSubscriber
     {

@@ -1,4 +1,4 @@
-using Assets.Scripts;
+using Assets.Scripts.Eventing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,8 +34,7 @@ public static class DependencyInjection
         foreach (var field in fieldsWithInject)
         {
             var requiredDependency = GetSingelton(field.FieldType);
-            if (requiredDependency is null)
-                requiredDependency = GetTransient(field.FieldType);
+            requiredDependency ??= GetTransient(field.FieldType);
 
             field.SetValue(target, requiredDependency);
         }
@@ -43,8 +42,7 @@ public static class DependencyInjection
         foreach (var property in propertiesWithInject)
         {
             var requiredDependency = GetSingelton(property.PropertyType);
-            if (requiredDependency is null)
-                requiredDependency = GetTransient(property.PropertyType);
+            requiredDependency ??= GetTransient(property.PropertyType);
 
             property.SetValue(target, requiredDependency);
         }

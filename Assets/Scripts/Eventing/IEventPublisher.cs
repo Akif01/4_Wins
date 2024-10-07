@@ -1,4 +1,6 @@
-﻿namespace Assets.Scripts
+﻿using Assets.Scripts.Eventing.Events;
+
+namespace Assets.Scripts.Eventing
 {
     internal interface IEventPublisher
     {

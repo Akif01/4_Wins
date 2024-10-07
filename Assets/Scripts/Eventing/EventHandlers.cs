@@ -1,6 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using Assets.Scripts.Eventing.Events;
+using System.Collections.Generic;
 
-namespace Assets.Scripts
+namespace Assets.Scripts.Eventing
 {
     public class EventHandlers
     {
@@ -18,9 +19,9 @@ namespace Assets.Scripts
             _handlers.Add(Handle);
         }
 
-        public IEnumerable<EventHandler<IEvent>> GetHandlers() 
-        { 
-            return _handlers; 
+        public IEnumerable<EventHandler<IEvent>> GetHandlers()
+        {
+            return _handlers;
         }
     }
 }
