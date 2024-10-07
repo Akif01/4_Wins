@@ -7,7 +7,8 @@ public class RigidbodyDragController : NetworkBehaviour
     private Rigidbody _rigidbody;
 
     [SerializeField]
-    private float _moveSpeed = 10.0f;
+    [Tooltip("The time it should take to reach the target. A smaller value means faster movement, while a larger value means slower movement.")]
+    private float _smoothTime = 0.5f;
 
     [SerializeField]
     private float _rotationSpeed = 10.0f;
@@ -109,7 +110,7 @@ public class RigidbodyDragController : NetworkBehaviour
             targetPosition.y = Mathf.Max(groundYPosition, targetPosition.y); // Clamp Y to prevent going below ground
         }
 
-        Vector3 newPosition = Vector3.SmoothDamp(_rigidbody.position, targetPosition, ref _velocity, 0.1f, _moveSpeed);
+        Vector3 newPosition = Vector3.SmoothDamp(_rigidbody.position, targetPosition, ref _velocity, _smoothTime);
         _rigidbody.useGravity = false;
         _rigidbody.velocity = Vector3.zero;
         _rigidbody.MovePosition(newPosition);
