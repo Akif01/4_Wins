@@ -35,7 +35,7 @@ public class RigidbodyDragController : NetworkBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
         if (!IsOwner)
             return;
@@ -58,13 +58,17 @@ public class RigidbodyDragController : NetworkBehaviour
             StopDrag();
         }
 
+        if (!_continueDrag)
+        {
+            HandleCursorChange();  // Only change cursor when not dragging
+        }
+    }
+
+    private void FixedUpdate()
+    {
         if (_continueDrag)
         {
             MoveRigidbodyToMouse();
-        }
-        else
-        {
-            HandleCursorChange();  // Only change cursor when not dragging
         }
     }
 
@@ -72,7 +76,6 @@ public class RigidbodyDragController : NetworkBehaviour
     {
         _continueDrag = false;
         _rigidbody.useGravity = true;
-        Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);  // Reset cursor when dragging stops
     }
 
     private void TryStartDrag()
