@@ -1,5 +1,3 @@
-using Assets.Scripts;
-using System;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -9,7 +7,7 @@ public class RigidbodyDragController : NetworkBehaviour
     private Rigidbody _rigidbody;
 
     [SerializeField]
-    private float _moveSpeed = 3.0f;
+    private float _moveSpeed = 10.0f;
 
     [SerializeField]
     private float _rotationSpeed = 10.0f;
@@ -23,6 +21,8 @@ public class RigidbodyDragController : NetworkBehaviour
 
     [SerializeField]
     private Texture2D _dragCursor;  // Assign your hand or grab icon here
+
+    private Vector3 _velocity = Vector3.zero;
 
     private void Start()
     {
@@ -98,19 +98,18 @@ public class RigidbodyDragController : NetworkBehaviour
         Vector3 targetPosition = _camera.ScreenToWorldPoint(mousePos);
         targetPosition.z = _rigidbody.position.z;  // Ensure it maintains the z position of the rigidbody
 
-        // Raycast downwards from the balls current position to detect the ground
+        // Raycast downwards from the current position to detect the ground
         Ray ray = new Ray(_rigidbody.position, Vector3.down); // Cast from the ball's current position
         RaycastHit hit;
 
         if (Physics.Raycast(ray, out hit, Mathf.Infinity))
         {
-            // Get the Y position of the ground, adjusted for the coin's size
+            // Get the Y position of the ground, adjusted for the size
             float groundYPosition = hit.point.y + _rigidbody.GetComponent<Collider>().bounds.extents.y;
             targetPosition.y = Mathf.Max(groundYPosition, targetPosition.y); // Clamp Y to prevent going below ground
         }
 
-        // Smoothly move the rigidbody to the target position
-        Vector3 newPosition = Vector3.Lerp(_rigidbody.position, targetPosition, _moveSpeed * Time.deltaTime);
+        Vector3 newPosition = Vector3.SmoothDamp(_rigidbody.position, targetPosition, ref _velocity, 0.1f, _moveSpeed);
         _rigidbody.useGravity = false;
         _rigidbody.velocity = Vector3.zero;
         _rigidbody.MovePosition(newPosition);
@@ -119,7 +118,7 @@ public class RigidbodyDragController : NetworkBehaviour
         Quaternion targetRotation = Quaternion.Euler(0, 0, 0);
 
         // Smoothly rotate towards the target rotation
-        _rigidbody.rotation = Quaternion.Slerp(_rigidbody.rotation, targetRotation, _rotationSpeed * Time.deltaTime);
+        _rigidbody.rotation = Quaternion.RotateTowards(_rigidbody.rotation, targetRotation, _rotationSpeed * Time.deltaTime * 360f);  // Multiply by 360 to make it degrees per second
     }
 
     private void HandleCursorChange()

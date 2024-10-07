@@ -266,8 +266,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _rigidbody: {fileID: 4782365585323824011}
-  _moveSpeed: 3
-  _rotationSpeed: 10
+  _moveSpeed: 10
+  _rotationSpeed: 1
   _camera: {fileID: 0}
   _dragCursor: {fileID: 0}
 --- !u!54 &4782365585323824011
