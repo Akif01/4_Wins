@@ -10,8 +10,6 @@ public class GameLogic : MonoBehaviour
     private const int _columns = 7;
 
     private int[,] _board = new int[_rows, _columns];
-
-    // Player IDs (1 for Player 1, 2 for Player 2)
     private int _currentPlayer = 1;
 
     private void Start()

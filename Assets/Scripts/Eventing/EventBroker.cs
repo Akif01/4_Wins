@@ -9,6 +9,11 @@ namespace Assets.Scripts.Eventing
     {
         private readonly Dictionary<Type, EventHandlers> _eventHandlersOfType = new();
 
+        public void ClearHandlers()
+        {
+            _eventHandlersOfType.Clear();
+        }
+
         public void Subscribe<T>(EventHandlers.EventHandler<T> handler) where T : IEvent
         {
             if (!_eventHandlersOfType.TryGetValue(typeof(T), out var handlers))

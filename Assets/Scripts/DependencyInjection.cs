@@ -10,9 +10,12 @@ public static class DependencyInjection
     private static readonly Dictionary<Type, object> _singeltonServices =  new();
     private static readonly Dictionary<Type, Func<object>> _transientServices =  new();
 
-    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterAssembliesLoaded)]
-    private static void OnAfterAssembliesLoaded()
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+    private static void OnBeforeSceneLoad()
     {
+        _singeltonServices.Clear();
+        _transientServices.Clear();
+
         RegisterSingelton(new EventBroker());
     }
 
