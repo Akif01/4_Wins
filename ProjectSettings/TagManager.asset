@@ -12,6 +12,8 @@ TagManager:
   - GameBoardColumn5
   - GameBoardColumn6
   - GameBoardColumn7
+  - SpawnPoint1
+  - SpawnPoint2
   layers:
   - Default
   - TransparentFX

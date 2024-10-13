@@ -32,10 +32,7 @@ public class NetworkManagerClientLimiter : MonoBehaviour
 
     private void OnDestroy()
     {
-        // Clean up the callback when the object is destroyed
         if (NetworkManager.Singleton != null)
-        {
             NetworkManager.Singleton.ConnectionApprovalCallback -= ApprovalCheck;
-        }
     }
 }

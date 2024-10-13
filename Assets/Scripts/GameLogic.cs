@@ -16,9 +16,10 @@ public class GameLogic : MonoBehaviour
 
     private void Start()
     {
-        ResetBoard();
-
+        DependencyInjection.InjectDependencies(this);
         _eventBroker.Subscribe<GameLogicDropPieceEvent>(HandleDropPieceEvent);
+
+        ResetBoard();
     }
 
     private void HandleDropPieceEvent(GameLogicDropPieceEvent ev)
