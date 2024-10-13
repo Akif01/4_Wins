@@ -1,4 +1,6 @@
 using Assets.Scripts.Eventing;
+using Assets.Scripts.Eventing.Events;
+using System;
 using UnityEngine;
 
 public class GameLogic : MonoBehaviour
@@ -15,17 +17,13 @@ public class GameLogic : MonoBehaviour
     private void Start()
     {
         ResetBoard();
+
+        _eventBroker.Subscribe<GameLogicDropPieceEvent>(HandleDropPieceEvent);
     }
 
-    // Update is called once per frame
-    private void Update()
+    private void HandleDropPieceEvent(GameLogicDropPieceEvent ev)
     {
-        // Check for player input
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            var column = Random.Range(0, 6);
-            DropPiece(column);
-        }
+        DropPiece(ev.Column);
     }
 
     // Resets the board for a new game

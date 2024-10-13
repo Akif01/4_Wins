@@ -3,7 +3,15 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - GameBoard
+  - GameBoardColumn1
+  - GameBoardColumn2
+  - GameBoardColumn3
+  - GameBoardColumn4
+  - GameBoardColumn5
+  - GameBoardColumn6
+  - GameBoardColumn7
   layers:
   - Default
   - TransparentFX
